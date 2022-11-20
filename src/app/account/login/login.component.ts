@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   form: FormGroup;
   loading = false;
   submitted = false;
-  isLoggedIn : boolean = false;
+  isLoggedIn: boolean = false;
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
@@ -27,30 +27,25 @@ export class LoginComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
-    public tokenStorageService : TokenStorageService,
+    public tokenStorageService: TokenStorageService,
     private alertService: AlertService,
     private readonly store: Store
   ) {
     this.store.select(fromRoot.userLogin).pipe(
       takeUntil(this.destroy$)
     ).subscribe(data => {
-      console.log('login data::::', data);
       if (data.isLoadingSuccess && data.result) {
-        if(data.user && data.user.access_token){
+        if (data.user && data.user.access_token) {
           this.tokenStorageService.startRefreshTokenTimer();
         }
-        // this.router.navigate(['/home']);
-         //       // get return url from query parameters or default to home page
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-          this.router.navigateByUrl(returnUrl);
+        // get return url from query parameters or default to home page
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.router.navigateByUrl(returnUrl);
       }
     });
-   }
+  }
 
   ngOnInit() {
-    // if (this.tokenStorage.getToken()) {
-    //   this.isLoggedIn = true;
-    // }
     this.form = this.formBuilder.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
@@ -70,13 +65,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.form.invalid) {
       return;
     }
-console.log('this.f',this.form.value)
     this.loading = true;
-    this.store.dispatch(userActions.login({user: { email: this.form.value.email, password: this.form.value.password }}));
+    this.store.dispatch(userActions.login({ user: { email: this.form.value.email, password: this.form.value.password } }));
 
     // this.accountService.login(this.form.value)
     //   .subscribe(data => {
-    //     console.log('data',data)
     //       this.isLoggedIn = true;
     //       // get return url from query parameters or default to home page
     //       const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -89,8 +82,8 @@ console.log('this.f',this.form.value)
     //     });
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
-}
+  }
 }

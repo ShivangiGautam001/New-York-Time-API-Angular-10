@@ -1,13 +1,14 @@
 ﻿import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MaterialModule } from './material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // ngrx related imports
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './app-state';
-import { UserEffects, TodoEffects } from './app-state/effects';
+import { UserEffects, StoryEffects } from './app-state/effects';
 import { EffectsModule } from '@ngrx/effects';
 // used to create fake backend
 // import { fakeBackendProvider } from './_helpers';
@@ -21,7 +22,9 @@ import { HomeComponent } from './home';
 @NgModule({
     imports: [
         CommonModule,
+        BrowserAnimationsModule,
         BrowserModule,
+        FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
         AppRoutingModule,
@@ -30,7 +33,7 @@ import { HomeComponent } from './home';
         StoreModule.forRoot(reducers, {
             metaReducers
         }),
-        EffectsModule.forRoot([UserEffects, TodoEffects])
+        EffectsModule.forRoot([UserEffects, StoryEffects])
     ],
     declarations: [
         AppComponent,

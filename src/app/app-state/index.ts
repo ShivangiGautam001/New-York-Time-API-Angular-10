@@ -8,29 +8,26 @@ import {
 import { localStorageSync } from 'ngrx-store-localstorage';
 import { environment } from '../../environments/environment';
 import * as fromUser from './reducers/user.reducer';
-import * as fromTodo from './reducers/todo.reducer';
+import * as fromStory from './reducers/story.reducer';
 
 export interface State {
   user: fromUser.State;
-  todo: fromTodo.State;
+  story: fromStory.State;
 }
 
 export const reducers: ActionReducerMap<State> = {
   user: fromUser.reducer,
-  todo: fromTodo.reducer,
+  story: fromStory.reducer,
 };
 
-const reducerKeys = ['user', 'todo'];
+const reducerKeys = ['user', 'story'];
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
-  return localStorageSync({keys: reducerKeys})(reducer);
+  return localStorageSync({ keys: reducerKeys })(reducer);
 }
 
 // console.log all actions
 export function debug(reducer: ActionReducer<any>): ActionReducer<any> {
-  return function(state, action) {
-    console.log('state', state);
-    console.log('action', action);
-
+  return function (state, action) {
     return reducer(state, action);
   };
 }
@@ -56,11 +53,11 @@ export const userSignup = createSelector(
 );
 
 
-// Todo reducers Begin
+// story reducers Begin
 
-export const geTodoState = createFeatureSelector<fromTodo.State>('todo');
+export const getStoryState = createFeatureSelector<fromStory.State>('story');
 
-export const getTasks = createSelector(
-  geTodoState,
-  fromTodo.getTasks
+export const getStories = createSelector(
+  getStoryState,
+  fromStory.getStories
 );

@@ -1,0 +1,68 @@
+<div class="container">
+  <div fxLayout="row" fxLayoutGap="10" class="items-center">
+    <div fxFlex="70%">
+      <h1>
+        <i class="far fa-newspaper"></i>
+        Latest {{selectedValueText}} Stories
+      </h1>
+    </div>
+    <div fxFlex="20%" class="text-right">
+      <mat-form-field appearance="fill">
+        <mat-label>Select a category</mat-label>
+        <mat-select [(ngModel)]="selectedValue" name="category" (selectionChange)="categoryChangeEvent($event)">
+          <mat-option *ngFor="let category of categories" [value]="category.value">
+            {{category.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxFlex="10%" class="text-right">
+      <button mat-raised-button color="warn">Search</button>
+    </div>
+  </div>
+  <hr>
+  <div class="empty-panel" *ngIf="!stories || !stories.length">
+    No Record Found
+  </div>
+  <div *ngIf="stories && stories.length">
+    <mat-card *ngFor="let story of stories;let i = index" class="mb-10 mat-elevation-z8">
+      <div fxLayout="row" fxLayoutGap="10" class="mh-70 c-p" (click)="showHideDetails(i)">
+        <div fxFlex="90%">
+          <mat-card-title>{{story.title}}</mat-card-title>
+          <mat-card-subtitle>
+            Published {{story.byline}} on {{story.created_date | date}}
+          </mat-card-subtitle>
+        </div>
+        <div fxFlex="10%" class="text-right">
+          <ng-container *ngIf="story.abstract !== '' || (story.multimedia && story.multimedia.length > 0)">
+            <i *ngIf="expandIndex === i" class="fas fa-chevron-up"></i>
+            <i *ngIf="expandIndex !== i" class="fas fa-chevron-down"></i>
+          </ng-container>
+          <!-- <button *ngIf="story.abstract !== '' || (story.multimedia && story.multimedia.length > 0)" mat-raised-button color="warn" (click)="showHideDetails(i)">Show 
+            <span *ngIf="expandIndex == i">Less</span>
+            <span *ngIf="expandIndex != i">More</span>
+          </button> -->
+        </div>
+      </div>
+      <div *ngIf="expandIndex == i" class="pad-10">
+        <figure *ngIf="story.multimedia && story.multimedia.length > 0">
+          <img class="pad-16" mat-card-image
+            src="{{story.multimedia && story.multimedia[0] ? story.multimedia[0].url : ''}}">
+          <figcaption>{{story.multimedia[0].caption}}</figcaption>
+        </figure>
+        <mat-card-content>
+          <p *ngIf="story.abstract">
+            {{story.abstract}}
+          </p>
+        </mat-card-content>
+      </div>
+      <!-- <mat-card-actions>
+          <button mat-menu-item>
+            <span><a href="{{story.url}}" target="_blank"><button mat-raised-button color="warn"> Read
+                  More</button></a></span>
+          </button>
+        </mat-card-actions> -->
+    </mat-card>
+  </div>
+
+</div>

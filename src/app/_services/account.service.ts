@@ -15,7 +15,7 @@ export class AccountService {
     constructor(
         private router: Router,
         private http: HttpClient,
-        private tokenStorageService : TokenStorageService
+        private tokenStorageService: TokenStorageService
     ) {
         this.userSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('user')));
         this.user = this.userSubject.asObservable();
@@ -24,13 +24,10 @@ export class AccountService {
     public get userValue(): User {
         this.userSubject.next(JSON.parse(localStorage.getItem('user')));
         this.user = this.userSubject.asObservable();
-        console.log('this.userSubject.value', this.userSubject.value)
         return JSON.parse(localStorage.getItem('user'));
-        // return this.userSubject.value;
     }
 
     login(postData) {
-        console.log('postData', postData)
         return this.http.post<User>(`${environment.apiUrl}/auth/login`, postData)
             // .pipe(map(data => {
             //     // store user details and jwt token in local storage to keep user logged in between page refreshes
