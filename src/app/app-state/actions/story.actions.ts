@@ -17,5 +17,5 @@ export const getStoriesSuccess = createAction(
 
 export const getStoriesFailure = createAction(
   GET_STORIES_FAILURE,
-  props<{ any }>()
+  props<{ message : string }>()
 );

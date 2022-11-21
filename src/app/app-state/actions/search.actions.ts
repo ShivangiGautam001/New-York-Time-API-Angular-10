@@ -16,5 +16,5 @@ export const getSearchStoriesSuccess = createAction(
 
 export const getSearchStoriesFailure = createAction(
   GET_SEARCH_STORIES_FAILURE,
-  props<{ any }>()
+  props<{ message: string }>()
 );

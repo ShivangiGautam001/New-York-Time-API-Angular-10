@@ -21,7 +21,7 @@ export class StoryEffects {
           map(response => {
             return storyActions.getStoriesSuccess({ response: response, section: action.section })
           }),
-          catchError((error: any) => of(storyActions.getStoriesFailure(error))))
+          catchError((error: any) => of(storyActions.getStoriesFailure({message: error}))))
       )
     )
   );

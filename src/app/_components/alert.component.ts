@@ -20,7 +20,7 @@ export class AlertComponent implements OnInit, OnDestroy {
         // subscribe to new alert notifications
         this.alertSubscription = this.alertService.onAlert(this.id)
             .subscribe(alert => {
-                alert.autoClose = true;
+                alert.autoClose = false;
                 // clear alerts when an empty alert is received
                 if (!alert.message) {
                     // filter out alerts without 'keepAfterRouteChange' flag

@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   submitted = false;
   isLoggedIn: boolean = false;
   destroy$: Subject<boolean> = new Subject<boolean>();
-
+  errorMessage : string = '';
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -34,13 +34,22 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.store.select(fromRoot.userLogin).pipe(
       takeUntil(this.destroy$)
     ).subscribe(data => {
-      if (data.isLoadingSuccess && data.result) {
-        if (data.user && data.user.access_token) {
-          this.tokenStorageService.startRefreshTokenTimer();
+      console.log('data',data)
+      if(data.isLoadingFailure || data.error){
+        this.loading = false;
+        this.errorMessage = data.error;
+        // this.alertService.error(data.error);
+      }
+      else{
+        this.errorMessage = '';
+        if (data.isLoadingSuccess && data.result) {
+          if (data.user && data.user.access_token) {
+            this.tokenStorageService.startRefreshTokenTimer();
+          }
+          // get return url from query parameters or default to home page
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+          this.router.navigateByUrl(returnUrl);
         }
-        // get return url from query parameters or default to home page
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-        this.router.navigateByUrl(returnUrl);
       }
     });
   }

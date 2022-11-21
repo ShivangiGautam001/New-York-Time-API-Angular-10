@@ -68,7 +68,10 @@ export const getStoriesSuccess = createSelector(
   getStoryState,
   fromStory.getStoriesSuccess
 );
-
+export const getStoriesFailure = createSelector(
+  getStoryState,
+  fromStory.getStoriesFailure
+);
 // search story reducers Begin
 
 export const getSearchStoryState = createFeatureSelector<fromSearch.State>('search');
@@ -76,4 +79,8 @@ export const getSearchStoryState = createFeatureSelector<fromSearch.State>('sear
 export const getSearchStories = createSelector(
   getSearchStoryState,
   fromSearch.getSearchStories
+);
+export const getSearchStoriesFailure = createSelector(
+  getSearchStoryState,
+  fromSearch.getSearchStoriesFailure
 );

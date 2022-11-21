@@ -7,10 +7,9 @@ import * as storage from '../state/storage';
 export interface State {
   stories?: ISearch[];
   searchHistory?: any;
-  currentStory?: Story;
   search?: string;
-  deleteStoryId?: any;
   result?: any;
+  error?: any;
   isLoading?: boolean;
   isLoadingSuccess?: boolean;
   isLoadingFailure?: boolean;
@@ -19,9 +18,8 @@ export interface State {
 export const initialState: State = {
   stories: storage.getItem('story').stories,
   searchHistory: [],
-  currentStory: {},
-  deleteStoryId: '',
   result: '',
+  error: '',
   isLoading: false,
   isLoadingSuccess: false,
   isLoadingFailure: false
@@ -63,9 +61,23 @@ const searchReducer = createReducer(
     return {
       result: response,
       stories: stories,
+      error: state.error,
       isLoading: false,
       searchHistory: searchHistory,
-      isLoadingSuccess: true
+      isLoadingSuccess: true,
+      isLoadingFailure: false,
+    };
+  }),
+  on(searchActions.getSearchStoriesFailure, (state, result) => {
+    const { message, type } = result;
+    return {
+      result: result,
+      error: message,
+      stories: state.stories,
+      searchHistory: state.searchHistory,
+      isLoading: false,
+      isLoadingFailure: true,
+      isLoadingSuccess: false,
     };
   })
 );
@@ -81,5 +93,15 @@ export const getSearchStories = (state: State) => {
     stories: state.stories,
     isLoading: state.isLoading,
     isLoadingSuccess: state.isLoadingSuccess
+  };
+};
+
+export const getSearchStoriesFailure = (state: State) => {
+  return {
+    stories: state.stories,
+    error: state.error,
+    searchHistory: state.searchHistory,
+    result: state.result,
+    isLoadingFailure: state.isLoadingFailure
   };
 };

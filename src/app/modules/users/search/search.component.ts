@@ -8,10 +8,6 @@ import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/timer';
-interface Category {
-  value: string;
-  viewValue: string;
-}
 
 @Component({
   selector: 'app-search',
@@ -23,23 +19,15 @@ export class SearchComponent implements OnInit {
   public img_url = 'https://static01.nyt.com/';
   public stories = [];
   destroy$: Subject<boolean> = new Subject<boolean>();
-  panelOpenState = false;
-  step = -1;
   expandIndex = null;
-  categories: Category[] = [
-    { value: 'world', viewValue: 'World' },
-    { value: 'science', viewValue: 'Science' }
-  ];
   searchedValue: string = '';
   selectedValueText: string = '';
   page = 0;
   throttle = 300;
   scrollDistance = 0;
   scrollUpDistance = 2;
-  direction = "";
   scrolled: boolean = false;
   searchHistory: string[] = [];
-  loading: boolean = false;
   private subscription: Subscription;
   private timer: Observable<any>;
   constructor(private store: Store, private alertService: AlertService) {
@@ -47,23 +35,34 @@ export class SearchComponent implements OnInit {
 
   ngOnInit() {
     this.dispatchGetArticle();
-    // this.store.dispatch(storyActions.getStories({ section: this.searchedValue }));
     this.store.select(fromRoot.getSearchStories)
       .pipe(
         takeUntil(this.destroy$)
       ).subscribe((data) => {
-        this.stories = data.stories;
-        this.searchHistory = data.searchHistory;
-        this.subscription = this.timer.subscribe(() => {
-          // set scrolled to false to hide loading div from view
-          this.scrolled = false;
-        });
+        if (!data.isLoading && data.isLoadingSuccess) {
+          this.stories = data.stories;
+          this.searchHistory = data.searchHistory;
+          this.subscription = this.timer.subscribe(() => {
+            // set scrolled to false to hide loading div from view
+            this.scrolled = false;
+          });
+        }
       }, error => {
         this.scrolled = false;
       });
-  }
-  setStep(index: number) {
-    this.step = index;
+
+    this.store.select(fromRoot.getSearchStoriesFailure)
+      .pipe(
+        takeUntil(this.destroy$)
+      ).subscribe((data) => {
+        if (data.error && data.isLoadingFailure) {
+          this.scrolled = false;
+          this.alertService.error(data.error);
+        }
+      }, error => {
+        this.alertService.error(error);
+        this.scrolled = false;
+      });
   }
 
   showHideDetails(i) {
@@ -74,15 +73,6 @@ export class SearchComponent implements OnInit {
       else {
         this.expandIndex = i;
       }
-    }
-  }
-
-  categoryChangeEvent(e) {
-    this.expandIndex = null;
-    if (e && e.value) {
-      // this.store.dispatch(storyActions.getStories({ section: e.value }));
-      let text = this.categories.find(x => x.value == e.value);
-      this.selectedValueText = text ? text.viewValue : "";
     }
   }
 
@@ -107,7 +97,6 @@ export class SearchComponent implements OnInit {
     // set scrolled to true to show loading div on view
     this.scrolled = true;
     this.timer = Observable.timer(500);
-
   }
   ngOnDestroy() {
     this.destroy$.next(true);

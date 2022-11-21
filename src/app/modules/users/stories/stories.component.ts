@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/timer';
+import { AccountService, AlertService } from '@app/_services';
+
 interface Category {
   value: string;
   viewValue: string;
@@ -23,8 +25,6 @@ export class StoriesComponent implements OnInit {
 
   public stories = [];
   destroy$: Subject<boolean> = new Subject<boolean>();
-  panelOpenState = false;
-  step = -1;
   expandIndex = null;
   categories: Category[] = [
     { value: 'home', viewValue: 'Home' },
@@ -33,26 +33,41 @@ export class StoriesComponent implements OnInit {
   ];
   selectedValue: string = 'home';
   selectedValueText: string = 'Home';
-  loading : boolean = false;
+  loading: boolean = false;
   private subscription: Subscription;
   private timer: Observable<any>;
 
-    constructor(private store: Store, private router: Router) {
+  constructor(private store: Store, private router: Router, public alertService: AlertService) {
   }
 
   ngOnInit() {
     this.getStoreDispatchEvent();
-    this.store.select(fromRoot.getStories)
+    this.store.select(fromRoot.getStoriesSuccess)
       .pipe(
         takeUntil(this.destroy$)
       ).subscribe((data) => {
-        this.stories = data.stories;
-        this.subscription = this.timer.subscribe(() => {
-          // set showloader to false to hide loading div from view
-          this.loading = false;
-      });
+        if (!data.isLoading && data.isLoadingSuccess) {
+          this.stories = data.stories;
+          this.subscription = this.timer.subscribe(() => {
+            // set showloader to false to hide loading div from view
+            this.loading = false;
+          });
+        }
       }, error => {
-        console.log('error', error)
+        this.alertService.error(error);
+        this.loading = false;
+      });
+
+    this.store.select(fromRoot.getStoriesFailure)
+      .pipe(
+        takeUntil(this.destroy$)
+      ).subscribe((data) => {
+        if (data.isLoadingFailure && data.error) {
+          this.loading = false;
+          this.alertService.error(data.error);
+        }
+      }, error => {
+        this.alertService.error(error);
         this.loading = false;
       });
   }
@@ -60,10 +75,6 @@ export class StoriesComponent implements OnInit {
   getStoreDispatchEvent() {
     this.store.dispatch(storyActions.getStories({ section: this.selectedValue }));
     this.setTimer();
-  }
-
-  setStep(index: number) {
-    this.step = index;
   }
 
   showHideDetails(i) {
@@ -89,15 +100,17 @@ export class StoriesComponent implements OnInit {
   navigateToSearch() {
     this.router.navigate(['/dashboard/search'])
   }
-  public setTimer(){
+
+  public setTimer() {
     // set loading to true to show loading div on view
-    this.loading   = true;
+    this.loading = true;
     this.timer = Observable.timer(500);
   }
+
   ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
-    if ( this.subscription && this.subscription instanceof Subscription) {
+    if (this.subscription && this.subscription instanceof Subscription) {
       this.subscription.unsubscribe();
     }
   }

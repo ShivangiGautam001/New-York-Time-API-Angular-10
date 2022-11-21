@@ -6,6 +6,7 @@ import * as storage from '../state/storage';
 export interface State {
   user: User;
   result: any;
+  error: any;
   isLoading: boolean;
   isLoadingSuccess: boolean;
   isLoadingFailure: boolean;
@@ -14,6 +15,7 @@ export interface State {
 export const initialState: State = {
   user: storage.getItem('user').user,
   result: '',
+  error: '',
   isLoading: false,
   isLoadingSuccess: false,
   isLoadingFailure: false
@@ -31,8 +33,23 @@ const loginReducer = createReducer(
       ...state,
       user: _user,
       result: type,
+      error: '',
       isLoading: false,
-      isLoadingSuccess: true
+      isLoadingSuccess: true,
+      isLoadingFailure: false
+    }
+  }),
+  on(userActions.loginFailure, (state, action) => {
+    const { message, type } = action;
+    const _user = { ...state.user };
+    return {
+      ...state,
+      user: _user,
+      result: type,
+      error : message,
+      isLoading: false,
+      isLoadingFailure: true,
+      isLoadingSuccess: false
     }
   }),
   on(userActions.signup, (state, { user }) => ({ user, isLoading: true })),
@@ -54,8 +71,10 @@ export const userLogin = (state: State) => {
   return {
     user: state.user,
     result: state.result,
+    error: state.error,
     isLoading: state.isLoading,
-    isLoadingSuccess: state.isLoadingSuccess
+    isLoadingSuccess: state.isLoadingSuccess,
+    isLoadingFailure: state.isLoadingFailure
   }
 };
 

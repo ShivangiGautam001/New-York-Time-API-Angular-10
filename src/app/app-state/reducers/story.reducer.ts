@@ -6,9 +6,8 @@ import * as storage from '../state/storage';
 
 export interface State {
   stories?: Story[];
-  currentStory?: Story;
-  deleteStoryId?: any;
   result?: any;
+  error?: any;
   isLoading?: boolean;
   isLoadingSuccess?: boolean;
   isLoadingFailure?: boolean;
@@ -16,9 +15,8 @@ export interface State {
 
 export const initialState: State = {
   stories: storage.getItem('story').stories,
-  currentStory: {},
-  deleteStoryId: '',
   result: '',
+  error: '',
   isLoading: false,
   isLoadingSuccess: false,
   isLoadingFailure: false
@@ -47,8 +45,20 @@ const storyReducer = createReducer(
     return {
       result: result.response,
       stories: stories,
+      error: '',
       isLoading: false,
-      isLoadingSuccess: true
+      isLoadingSuccess: true,
+      isLoadingFailure: false,
+    };
+  }),
+  on(storyActions.getStoriesFailure, (state, result) => {
+    const { message, type } = result;
+    return {
+      result: result,
+      error: message,
+      isLoading: false,
+      isLoadingFailure: true,
+      isLoadingSuccess: false,
     };
   })
 );
@@ -67,6 +77,16 @@ export const getStories = (state: State) => {
 };
 export const getStoriesSuccess = (state: State) => {
   return {
+    result: state.result,
+    stories: state.stories,
+    isLoading: state.isLoading,
+    error: state.error,
     isLoadingSuccess: state.isLoadingSuccess
+  };
+};
+export const getStoriesFailure = (state: State) => {
+  return {
+    error: state.error,
+    isLoadingFailure: state.isLoadingFailure
   };
 };

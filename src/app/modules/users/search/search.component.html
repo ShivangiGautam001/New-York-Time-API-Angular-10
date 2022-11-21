@@ -16,10 +16,10 @@
       </mat-autocomplete>
     </mat-form-field>
   </div>
-  <div class="empty-panel" *ngIf="!stories || !stories.length">
+  <div class="empty-panel" *ngIf="!scrolled && (!stories || !stories.length)">
     No Record Found
   </div>
-  <div class="custom-fix-height" infinite-scroll [infiniteScrollDistance]="scrollDistance"
+  <div *ngIf="stories && stories.length > 0" class="custom-fix-height" infinite-scroll [infiniteScrollDistance]="scrollDistance"
     [infiniteScrollUpDistance]="scrollUpDistance" [infiniteScrollThrottle]="throttle" (scrolled)="onScrollDown($event)">
     <mat-card *ngFor="let story of stories;let i = index" class="mb-10 mat-elevation-z8">
       <div fxLayout="row" fxLayoutGap="10" class="mh-70 c-p" (click)="showHideDetails(i)">

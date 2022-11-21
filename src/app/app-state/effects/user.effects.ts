@@ -18,8 +18,14 @@ export class UserEffects {
       ofType(userActions.login),
       exhaustMap(action =>
         this.accountService.login(action.user).pipe(
-          map(response => userActions.loginSuccess(response)),
-          catchError((error: any) => of(userActions.loginFailure(error))))
+          map(response => {
+            console.log('responsem',response)
+            return userActions.loginSuccess(response)
+          }),
+          catchError((error: any) => {
+            console.log('error',error)
+            return of(userActions.loginFailure({message: error}))
+          }))
       )
     )
   );

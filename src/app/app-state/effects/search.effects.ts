@@ -21,7 +21,7 @@ export class SearchEffects {
           map(response => {
             return searchActions.getSearchStoriesSuccess({ response: response, searchValue: action.searchValue, page: action.page })
           }),
-          catchError((error: any) => of(searchActions.getSearchStoriesFailure(error))))
+          catchError((error: any) => of(searchActions.getSearchStoriesFailure({message: error}))))
       )
     )
   );
