@@ -1,0 +1,7 @@
+{
+    "/svc": {
+        "target": "https://api.nytimes.com",
+        "secure": true,
+        "changeOrigin": true
+    }
+}

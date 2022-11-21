@@ -9,7 +9,7 @@ export class SearchService {
 
   constructor(private http: HttpClient) { }
 
-  rootURL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
+  rootURL = '/svc/search/v2/articlesearch.json';
 
   getSearchStories(searchValue, page) {
     return this.http.get(this.rootURL + `?q=${searchValue}&page=${page}&api-key=${NY_TIMES_API_KEY}`);
