@@ -20,6 +20,7 @@ export class AlertComponent implements OnInit, OnDestroy {
         // subscribe to new alert notifications
         this.alertSubscription = this.alertService.onAlert(this.id)
             .subscribe(alert => {
+                alert.autoClose = true;
                 // clear alerts when an empty alert is received
                 if (!alert.message) {
                     // filter out alerts without 'keepAfterRouteChange' flag
@@ -74,7 +75,7 @@ export class AlertComponent implements OnInit, OnDestroy {
     cssClass(alert: Alert) {
         if (!alert) return;
 
-        const classes = ['alert', 'alert-dismissable', 'mt-4', 'container'];
+        const classes = ['alert', 'alert-dismissable', 'mt-4', 'container', 'alert-position'];
                 
         const alertTypeClass = {
             [AlertType.Success]: 'alert alert-success',

@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { LayoutComponent } from './layout.component';
-import { ListComponent } from './list.component';
-import { AddEditComponent } from './add-edit.component';
+import { LayoutComponent } from './layout/layout.component';
 import { StoriesComponent } from './stories/stories.component';
+import { SearchComponent } from './search/search.component';
 const routes: Routes = [
     {
         path: '', component: LayoutComponent,
         children: [
-            { path: '', component: StoriesComponent },
-            { path: 'add', component: AddEditComponent },
-            { path: 'edit/:id', component: AddEditComponent }
+            { path: '', redirectTo: 'stories', pathMatch: 'full' },
+            { path: 'stories', component: StoriesComponent },
+            { path: 'search', component: SearchComponent }
         ]
     }
 ];

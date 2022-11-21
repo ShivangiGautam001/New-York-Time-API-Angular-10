@@ -3,10 +3,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AccountService, AlertService } from '@app/_services';
-import { TokenStorageService } from '../../_services/token.service';
+import { TokenStorageService } from '../../../_services/token.service';
 import { Store } from '@ngrx/store';
-import * as userActions from '../../app-state/actions';
-import * as fromRoot from '../../app-state';
+import * as userActions from '../../../app-state/actions';
+import * as fromRoot from '../../../app-state';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 @Component({

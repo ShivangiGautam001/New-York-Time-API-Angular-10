@@ -25,38 +25,4 @@ export class StoryEffects {
       )
     )
   );
-
-  createStory$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(storyActions.createStory),
-      exhaustMap(action =>
-        this.storiesService.addStory(action.story).pipe(
-          map(response => storyActions.createStorySuccess(response)),
-          catchError((error: any) => of(storyActions.createStoryFailure(error))))
-      )
-    )
-  );
-
-
-  deleteStory$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(storyActions.deleteStory),
-      exhaustMap(action => this.storiesService.deleteStory(action.storyid).pipe(
-        map(response => storyActions.deleteStorySuccess(response)),
-        catchError((error: any) => of(storyActions.deleteStoryFailure(error))))
-      )
-    )
-  );
-
-  editStory$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(storyActions.editStory),
-      exhaustMap(action =>
-        this.storiesService.editStory(action.story).pipe(
-          map(response => storyActions.editStorySuccess(response)),
-          catchError((error: any) => of(storyActions.editStoryFailure(error))))
-      )
-    )
-  );
-
 }

@@ -8,19 +8,22 @@ import {
 import { localStorageSync } from 'ngrx-store-localstorage';
 import { environment } from '../../environments/environment';
 import * as fromUser from './reducers/user.reducer';
+import * as fromSearch from './reducers/search.reducer';
 import * as fromStory from './reducers/story.reducer';
 
 export interface State {
   user: fromUser.State;
   story: fromStory.State;
+  search: fromSearch.State;
 }
 
 export const reducers: ActionReducerMap<State> = {
   user: fromUser.reducer,
   story: fromStory.reducer,
+  search: fromSearch.reducer
 };
 
-const reducerKeys = ['user', 'story'];
+const reducerKeys = ['user', 'story', 'search'];
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
   return localStorageSync({ keys: reducerKeys })(reducer);
 }
@@ -60,4 +63,17 @@ export const getStoryState = createFeatureSelector<fromStory.State>('story');
 export const getStories = createSelector(
   getStoryState,
   fromStory.getStories
+);
+export const getStoriesSuccess = createSelector(
+  getStoryState,
+  fromStory.getStoriesSuccess
+);
+
+// search story reducers Begin
+
+export const getSearchStoryState = createFeatureSelector<fromSearch.State>('search');
+
+export const getSearchStories = createSelector(
+  getSearchStoryState,
+  fromSearch.getSearchStories
 );

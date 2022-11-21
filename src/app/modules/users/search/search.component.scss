@@ -1,16 +1,3 @@
-.example-action-buttons {
-    padding-bottom: 20px;
-}
-
-.example-headers-align .mat-expansion-panel-header-description {
-    justify-content: space-between;
-    align-items: center;
-}
-
-.example-headers-align .mat-mdc-form-field+.mat-mdc-form-field {
-    margin-left: 8px;
-}
-
 .article-header {
     height: auto;
     align-items: center;
@@ -48,7 +35,6 @@
 
 .spinner {
     position: absolute;
-
     // this will place spinner in center of form
     top: 50%;
     left: 50%;
@@ -60,4 +46,24 @@
     text-align: center;
     font-size: 20px;
     padding: 20px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.section-name {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-family: serif;
+    margin-bottom: 5px;
+}
+
+.print-name {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.custom-fix-height {
+    height: 100%;
 }

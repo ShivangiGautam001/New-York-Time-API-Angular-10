@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import * as storyActions from '../../app-state/actions';
-import * as fromRoot from '../../app-state';
+import * as storyActions from '../../../app-state/actions';
+import * as fromRoot from '../../../app-state';
 import { Subject } from 'rxjs';
-
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/timer';
 interface Category {
   value: string;
   viewValue: string;
@@ -24,26 +27,41 @@ export class StoriesComponent implements OnInit {
   step = -1;
   expandIndex = null;
   categories: Category[] = [
+    { value: 'home', viewValue: 'Home' },
     { value: 'world', viewValue: 'World' },
     { value: 'science', viewValue: 'Science' }
   ];
-  selectedValue: string = 'world';
-  selectedValueText: string = 'World';
-  constructor(private store: Store) {
+  selectedValue: string = 'home';
+  selectedValueText: string = 'Home';
+  loading : boolean = false;
+  private subscription: Subscription;
+  private timer: Observable<any>;
+
+    constructor(private store: Store, private router: Router) {
   }
 
   ngOnInit() {
-    this.store.dispatch(storyActions.getStories({ section: this.selectedValue }));
+    this.getStoreDispatchEvent();
     this.store.select(fromRoot.getStories)
       .pipe(
         takeUntil(this.destroy$)
       ).subscribe((data) => {
-        console.log('data+++++++++++++++++++++++++++++++', data)
         this.stories = data.stories;
+        this.subscription = this.timer.subscribe(() => {
+          // set showloader to false to hide loading div from view
+          this.loading = false;
+      });
       }, error => {
         console.log('error', error)
+        this.loading = false;
       });
   }
+
+  getStoreDispatchEvent() {
+    this.store.dispatch(storyActions.getStories({ section: this.selectedValue }));
+    this.setTimer();
+  }
+
   setStep(index: number) {
     this.step = index;
   }
@@ -62,13 +80,25 @@ export class StoriesComponent implements OnInit {
   categoryChangeEvent(e) {
     this.expandIndex = null;
     if (e && e.value) {
-      this.store.dispatch(storyActions.getStories({ section: e.value }));
+      this.getStoreDispatchEvent();
       let text = this.categories.find(x => x.value == e.value);
       this.selectedValueText = text ? text.viewValue : "";
     }
   }
+
+  navigateToSearch() {
+    this.router.navigate(['/dashboard/search'])
+  }
+  public setTimer(){
+    // set loading to true to show loading div on view
+    this.loading   = true;
+    this.timer = Observable.timer(500);
+  }
   ngOnDestroy() {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
+    if ( this.subscription && this.subscription instanceof Subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

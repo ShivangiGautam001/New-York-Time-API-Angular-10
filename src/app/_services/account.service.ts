@@ -29,21 +29,6 @@ export class AccountService {
 
     login(postData) {
         return this.http.post<User>(`${environment.apiUrl}/auth/login`, postData)
-            // .pipe(map(data => {
-            //     // store user details and jwt token in local storage to keep user logged in between page refreshes
-            //     // localStorage.setItem('user', JSON.stringify(user));
-            //     // this.userSubject.next(user);
-
-            //     let userData : User = postData;
-            //     userData.access_token = data.access_token;
-            //       // this.tokenStorage.saveToken(data.accessToken);
-            //       // this.tokenStorage.saveUser(data);
-            // // store user details and jwt token in local storage to keep user logged in between page refreshes
-            // localStorage.setItem('user', JSON.stringify(userData));
-            // this.userSubject.next(userData);
-            //     return data;
-            // }));
-
             .pipe(
                 map((response) => response),
                 catchError(err => {

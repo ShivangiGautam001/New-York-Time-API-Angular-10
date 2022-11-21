@@ -32,12 +32,17 @@ const storyReducer = createReducer(
   on(storyActions.getStoriesSuccess, (state, result) => {
     let stories: Story[] = [];
     const response = result.response;
-    let filteredData = response.results.filter(item => item.section && item.section.toLowerCase() === result.section);
-    if (filteredData) {
-      stories = [...filteredData];
+    if(result.section == 'home') {
+      stories = [...response.results];
     }
-    else {
-      stories = [];
+    else{
+      let filteredData = response.results.filter(item => item.section && item.section.toLowerCase() === result.section);
+      if (filteredData) {
+        stories = [...filteredData];
+      }
+      else {
+        stories = [];
+      }
     }
     return {
       result: result.response,
@@ -46,53 +51,6 @@ const storyReducer = createReducer(
       isLoadingSuccess: true
     };
   })
-  // ({result: result.response, isLoading: false, isLoadingSuccess: true})),
-
-  // // Create Story Reducers
-  // on(storyActions.createStory, (state, {story}) => ({...state, isLoading: true, currentStory: story})),
-  // on(storyActions.createStorySuccess, (state, result) => {
-  //   const stories = undefined !== state.stories ? _.cloneDeep(state.stories) : [];
-  //   const currentStory = undefined !== state.currentStory ? _.cloneDeep(state.currentStory) : {};
-  //   currentStory. = result.storyId;
-  //   stories.push(currentStory);
-  //   return {
-  //     stories,
-  //     isLoading: false,
-  //     isLoadingSuccess: true
-  //   };
-  // }),
-
-  // Delete Story Reducers
-  // on(storyActions.deleteStory, (state, {storyid}) => ({...state, isLoading: true, deleteStoryId: storyid})),
-  // on(storyActions.deleteStorySuccess, (state, result) => {
-  //   let stories = undefined !== state.stories ? _.cloneDeep(state.stories) : [];
-  //   if (result.status) {
-  //     stories = stories.filter(story => story.id !== state.deleteStoryId);
-  //   }
-  //   return {
-  //     stories,
-  //     isLoading: false,
-  //     isLoadingSuccess: true
-  //   };
-  // }),
-
-  // Edit Story Reducers
-  //  on(storyActions.editStory, (state, {story}) => ({...state, isLoading: true, currentStory: story})),
-  //  on(storyActions.editStorySuccess, (state, result) => {
-  //   let stories = undefined !== state.stories ? _.cloneDeep(state.stories) : [];
-  //   const currentStory = undefined !== state.currentStory ? _.cloneDeep(state.currentStory) : {};
-  //   stories = stories.map(tsk => {
-  //     if (tsk.id === currentStory.id) {
-  //       tsk = currentStory;
-  //     }
-  //     return tsk;
-  //   });
-  //   return {
-  //     stories,
-  //     isLoading: false,
-  //     isLoadingSuccess: true
-  //   };
-  // })
 );
 
 export function reducer(state: State | undefined, action: Action): any {
@@ -104,6 +62,11 @@ export const getStories = (state: State) => {
     result: state.result,
     stories: state.stories,
     isLoading: state.isLoading,
+    isLoadingSuccess: state.isLoadingSuccess
+  };
+};
+export const getStoriesSuccess = (state: State) => {
+  return {
     isLoadingSuccess: state.isLoadingSuccess
   };
 };

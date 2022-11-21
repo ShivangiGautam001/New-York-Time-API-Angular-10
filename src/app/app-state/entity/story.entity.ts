@@ -1,10 +1,4 @@
 export class IStoryResponse {
-  // id?: any;
-  // createdBy?: string;
-  // task?: any;
-  // assignee?: string;
-  // status?: string;
-
   copyright?: string;
   last_updated?: string;
   num_results?: number;

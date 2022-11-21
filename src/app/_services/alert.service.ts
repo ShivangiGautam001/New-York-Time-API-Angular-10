@@ -3,6 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { Alert, AlertType } from '@app/_models';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Injectable({ providedIn: 'root' })
 export class AlertService {

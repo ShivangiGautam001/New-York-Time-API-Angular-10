@@ -1,0 +1,68 @@
+<div class="container">
+  <h1>
+    <i class="far fa-newspaper"></i>
+    Search Stories
+  </h1>
+  <div fxLayout="row">
+    <mat-form-field class="w-100">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="search" [(ngModel)]="searchedValue" placeholder="Search here" class="search-input"
+        [matAutocomplete]="auto" [ngModelOptions]="{standalone: true}"
+        (keyup.enter)="searchArticles($event.target.value)" (blur)="searchArticles($event.target.value)">
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)='searchArticles($event.option.value)'>
+        <mat-option *ngFor="let option of searchHistory" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div class="empty-panel" *ngIf="!stories || !stories.length">
+    No Record Found
+  </div>
+  <div class="custom-fix-height" infinite-scroll [infiniteScrollDistance]="scrollDistance"
+    [infiniteScrollUpDistance]="scrollUpDistance" [infiniteScrollThrottle]="throttle" (scrolled)="onScrollDown($event)">
+    <mat-card *ngFor="let story of stories;let i = index" class="mb-10 mat-elevation-z8">
+      <div fxLayout="row" fxLayoutGap="10" class="mh-70 c-p" (click)="showHideDetails(i)">
+        <div fxFlex="90%" class="pad-10">
+          <div class="section-name">{{story.subsection_name ? story.subsection_name : story.section_name ?
+            story.section_name : ''}}</div>
+          <mat-card-title>{{story.headline?.main}}</mat-card-title>
+          <div class="print-name">
+            {{story.headline && story.headline?.print_headline ? story.headline?.print_headline : ''}}
+          </div>
+          <mat-card-subtitle>
+            Published {{story.byline?.original}} on {{story.pub_date | date}}
+          </mat-card-subtitle>
+        </div>
+        <div fxFlex="10%" class="text-right">
+          <span
+            *ngIf="(story.abstract !== '' || (story.multimedia && story.multimedia.length > 0)) && expandIndex == i">
+            <i class="fas fa-chevron-up"></i>
+          </span>
+          <span
+            *ngIf="(story.abstract !== '' || (story.multimedia && story.multimedia.length > 0)) && expandIndex != i">
+            <i class="fas fa-chevron-down"></i>
+          </span>
+        </div>
+      </div>
+      <div *ngIf="expandIndex == i" class="pad-10">
+        <figure *ngIf="story.multimedia && story.multimedia.length > 0">
+          <img class="pad-16" mat-card-image
+            src="{{story.multimedia && story.multimedia[0] ? img_url + story.multimedia[0].url : ''}}">
+          <figcaption *ngIf="story.multimedia[0].caption">{{story.multimedia[0].caption}}</figcaption>
+        </figure>
+        <mat-card-content>
+          <hr>
+          <p *ngIf="story.lead_paragraph">
+            {{story.lead_paragraph}}
+          </p>
+
+          <p *ngIf="story.abstract">
+            {{story.abstract}}
+          </p>
+        </mat-card-content>
+      </div>
+    </mat-card>
+  </div>
+  <mat-spinner style="margin:0 auto;" *ngIf="scrolled" mode="indeterminate"></mat-spinner>
+</div>

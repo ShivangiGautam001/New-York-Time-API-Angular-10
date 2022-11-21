@@ -15,7 +15,7 @@ export class LayoutComponent {
   ) {
     // redirect to home if already logged in
     if (this.accountService.userValue) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/dashboard']);
     }
   }
 

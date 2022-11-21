@@ -4,14 +4,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home';
 import { AuthGuard } from './_helpers';
 
-const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
-const usersModule = () => import('./users/users.module').then(x => x.UsersModule);
+const accountModule = () => import('./modules/account/account.module').then(x => x.AccountModule);
+const usersModule = () => import('./modules/users/users.module').then(x => x.UsersModule);
 
 const routes: Routes = [
-    { path: '', redirectTo: 'articles', pathMatch: 'full' },
-    { path: 'articles', loadChildren: usersModule, canActivate: [AuthGuard] },
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: 'dashboard', loadChildren: usersModule, canActivate: [AuthGuard] },
     { path: 'account', loadChildren: accountModule },
-
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
 ];
