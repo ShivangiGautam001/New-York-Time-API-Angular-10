@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
-import { AccountService, AlertService } from '@app/_services';
-import { TokenStorageService } from '../../../_services/token.service';
+import { AccountService } from '@app/services';
 import { Store } from '@ngrx/store';
 import * as userActions from '../../../app-state/actions';
 import * as fromRoot from '../../../app-state';
@@ -21,30 +19,26 @@ export class LoginComponent implements OnInit, OnDestroy {
   submitted = false;
   isLoggedIn: boolean = false;
   destroy$: Subject<boolean> = new Subject<boolean>();
-  errorMessage : string = '';
+  errorMessage: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private accountService: AccountService,
-    public tokenStorageService: TokenStorageService,
-    private alertService: AlertService,
+    public accountService: AccountService,
     private readonly store: Store
   ) {
     this.store.select(fromRoot.userLogin).pipe(
       takeUntil(this.destroy$)
     ).subscribe(data => {
-      console.log('data',data)
-      if(data.isLoadingFailure || data.error){
+      if (data.isLoadingFailure || data.error) {
         this.loading = false;
         this.errorMessage = data.error;
-        // this.alertService.error(data.error);
       }
-      else{
+      else {
         this.errorMessage = '';
         if (data.isLoadingSuccess && data.result) {
           if (data.user && data.user.access_token) {
-            this.tokenStorageService.startRefreshTokenTimer();
+            this.accountService.startRefreshTokenTimer();
           }
           // get return url from query parameters or default to home page
           const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -66,29 +60,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.submitted = true;
-
-    // reset alerts on submit
-    this.alertService.clear();
-
     // stop here if form is invalid
     if (this.form.invalid) {
       return;
     }
     this.loading = true;
     this.store.dispatch(userActions.login({ user: { email: this.form.value.email, password: this.form.value.password } }));
-
-    // this.accountService.login(this.form.value)
-    //   .subscribe(data => {
-    //       this.isLoggedIn = true;
-    //       // get return url from query parameters or default to home page
-    //       const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    //       this.router.navigateByUrl(returnUrl);
-    //     },
-    //     error => {
-    //       this.alertService.error(error);
-    //       this.loading = false;
-    //       this.isLoggedIn = false;
-    //     });
   }
 
   ngOnDestroy() {

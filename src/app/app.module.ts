@@ -12,14 +12,10 @@ import { reducers, metaReducers } from './app-state';
 import { UserEffects, StoryEffects, SearchEffects } from './app-state/effects';
 import { EffectsModule } from '@ngrx/effects';
 
-// used to create fake backend
-// import { fakeBackendProvider } from './_helpers';
-
 import { AppRoutingModule } from './app-routing.module';
-import { JwtInterceptor, ErrorInterceptor } from './_helpers';
+import { JwtInterceptor, ErrorInterceptor } from '@app/interceptor';
 import { AppComponent } from './app.component';
-import { AlertComponent } from './_components';
-import { HomeComponent } from './home';
+import { AlertComponent } from '@app/components';
 
 @NgModule({
     imports: [
@@ -40,15 +36,11 @@ import { HomeComponent } from './home';
     ],
     declarations: [
         AppComponent,
-        AlertComponent,
-        HomeComponent
+        AlertComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
-        // provider used to create fake backend
-        // fakeBackendProvider
     ],
     bootstrap: [AppComponent]
 })

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map, exhaustMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { AccountService } from '../../_services/account.service';
+import { AccountService } from '@app/services';
 import * as userActions from '../actions';
 
 @Injectable()
@@ -19,11 +19,9 @@ export class UserEffects {
       exhaustMap(action =>
         this.accountService.login(action.user).pipe(
           map(response => {
-            console.log('responsem',response)
             return userActions.loginSuccess(response)
           }),
           catchError((error: any) => {
-            console.log('error',error)
             return of(userActions.loginFailure({message: error}))
           }))
       )
