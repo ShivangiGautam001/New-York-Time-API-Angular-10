@@ -13,7 +13,7 @@ Then
 
 ## Install npm packages
 
-Install the npm packages described in the package.json and verify that it works:
+Install the npm packages described in the package.json and verify that it works.
 Run `npm install` to install `node_modules`, it will install dependencies required to run the application. 
 
 ## Development server
