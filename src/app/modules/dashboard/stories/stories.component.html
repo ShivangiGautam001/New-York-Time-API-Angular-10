@@ -1,12 +1,12 @@
 <div class="container">
-  <div fxLayout="row" fxLayoutGap="10" class="items-center">
-    <div fxFlex="70%">
+  <div fxLayout="row" fxLayout.lt-sm="column" fxLayout.lt-md="row" fxLayoutGap="10" class="items-center">
+    <div fxFlex="70%" fxFlex.lt-sm="100" fxFlex.lt-md="40%" >
       <h1>
         <i class="far fa-newspaper"></i>
         {{selectedValueText}} Stories
       </h1>
     </div>
-    <div fxFlex="20%" class="text-right">
+    <div fxFlex="20%" class="text-right" fxFlex.lt-sm="100" fxFlex.lt-md="40%">
       <mat-form-field>
         <mat-label>Select a category</mat-label>
         <mat-select [(ngModel)]="selectedValue" name="category" (selectionChange)="categoryChangeEvent($event)">
@@ -16,7 +16,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div fxFlex="10%" class="text-right">
+    <div fxFlex="10%" class="text-right" fxFlex.lt-sm="100" fxFlex.lt-md="20%">
       <button mat-raised-button color="warn" (click)="navigateToSearch()">Search</button>
     </div>
   </div>
