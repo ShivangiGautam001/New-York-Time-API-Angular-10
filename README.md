@@ -33,15 +33,16 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng test --code-coverage`.
 
-## Local Server for Login and Registration 
-
-Clone local server project using this repo -> https://github.com/techiediaries/fake-api-jwt-json-server
 
 # JSONServer + JWT Auth
 
 A Fake REST API using json-server with JWT authentication. 
 
 Implemented End-points: login,register
+
+## Clone Project for Login and Registration 
+
+Clone local server project using this repo -> https://github.com/techiediaries/fake-api-jwt-json-server
 
 ## Install
 
