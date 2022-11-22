@@ -1,9 +1,19 @@
 # New-York-Time-API-Angular-10
 
+This is a project to integrate New York Time API with Angular 10 Application.
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.3.
 
-## Install
+## Clone the repository
 
+Inside a folder path, run this command
+`git clone https://github.com/ShivangiGautam001/New-York-Time-API-Angular-10.git`
+
+Then
+`cd New-York-Time-API-Angular-10`
+
+## Install npm packages
+
+Install the npm packages described in the package.json and verify that it works:
 Run `npm install` to install `node_modules`, it will install dependencies required to run the application. 
 
 ## Development server

@@ -27,12 +27,12 @@ export class StoriesComponent implements OnInit {
   destroy$: Subject<boolean> = new Subject<boolean>();
   expandIndex = null;
   categories: Category[] = [
-    { value: 'home', viewValue: 'Home' },
+    { value: 'home', viewValue: 'All' },
     { value: 'world', viewValue: 'World' },
     { value: 'science', viewValue: 'Science' }
   ];
   selectedValue: string = 'home';
-  selectedValueText: string = 'Home';
+  selectedValueText: string = 'All';
   loading: boolean = false;
   private subscription: Subscription;
   private timer: Observable<any>;
