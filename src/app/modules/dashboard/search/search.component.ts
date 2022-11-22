@@ -27,6 +27,7 @@ export class SearchComponent implements OnInit {
   scrollDistance = 0;
   scrollUpDistance = 2;
   scrolled: boolean = false;
+  loading: boolean = true;
   searchHistory: string[] = [];
   private subscription: Subscription;
   private timer: Observable<any>;
@@ -45,10 +46,12 @@ export class SearchComponent implements OnInit {
           this.subscription = this.timer.subscribe(() => {
             // set scrolled to false to hide loading div from view
             this.scrolled = false;
+            this.loading = false;
           });
         }
       }, error => {
         this.scrolled = false;
+        this.loading = false;
       });
 
     this.store.select(fromRoot.getSearchStoriesFailure)
@@ -80,6 +83,7 @@ export class SearchComponent implements OnInit {
     this.searchedValue = value ? value : '';
     this.page = 0;
     this.scrolled = false;
+    this.loading = true;
     this.dispatchGetArticle();
   }
 
@@ -89,13 +93,14 @@ export class SearchComponent implements OnInit {
   }
 
   onScrollDown(ev) {
+    this.loading = false;
     this.page = Number(this.page) + 1;
     this.dispatchGetArticle();
   }
 
   public setTimer() {
     // set scrolled to true to show loading div on view
-    this.scrolled = true;
+    this.scrolled = this.loading ? false : true;
     this.timer = Observable.timer(500);
   }
   ngOnDestroy() {

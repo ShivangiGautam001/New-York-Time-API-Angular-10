@@ -6,9 +6,9 @@
   <div fxLayout="row">
     <mat-form-field class="w-100">
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput type="search" [(ngModel)]="searchedValue" placeholder="Search here" class="search-input"
+      <input matInput type="search" [(ngModel)]="searchedValue" placeholder="Type here and hit enter" class="search-input"
         [matAutocomplete]="auto" [ngModelOptions]="{standalone: true}"
-        (keyup.enter)="searchArticles($event.target.value)" (blur)="searchArticles($event.target.value)">
+        (keyup.enter)="searchArticles($event.target.value)">
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)='searchArticles($event.option.value)'>
         <mat-option *ngFor="let option of searchHistory" [value]="option">
           {{option}}
@@ -16,10 +16,11 @@
       </mat-autocomplete>
     </mat-form-field>
   </div>
-  <div class="empty-panel" *ngIf="!scrolled && (!stories || !stories.length)">
+  <mat-spinner style="margin:0 auto;" *ngIf="loading && !scrolled" mode="indeterminate"></mat-spinner>
+  <div class="empty-panel" *ngIf="!loading && (!stories || !stories.length)">
     No Record Found
   </div>
-  <div *ngIf="stories && stories.length > 0" class="custom-fix-height" infinite-scroll [infiniteScrollDistance]="scrollDistance"
+  <div *ngIf="!loading && stories && stories.length > 0" class="custom-fix-height" infinite-scroll [infiniteScrollDistance]="scrollDistance"
     [infiniteScrollUpDistance]="scrollUpDistance" [infiniteScrollThrottle]="throttle" (scrolled)="onScrollDown($event)">
     <mat-card *ngFor="let story of stories;let i = index" class="mb-10 mat-elevation-z8">
       <div fxLayout="row" fxLayoutGap="10" class="mh-70 c-p" (click)="showHideDetails(i)">
@@ -64,5 +65,5 @@
       </div>
     </mat-card>
   </div>
-  <mat-spinner style="margin:0 auto;" *ngIf="scrolled" mode="indeterminate"></mat-spinner>
+  <mat-spinner style="margin:0 auto;" *ngIf="scrolled && !loading" mode="indeterminate"></mat-spinner>
 </div>
